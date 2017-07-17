@@ -1,0 +1,38 @@
+---
+driver:
+  name: pruebaamazon
+
+driver_config:
+  subscription_id:37ab50cd-e760-44c6-8d94-e90963b1fa63
+  location: "West Europe" 
+  machine_size: "Standar DS1_v2"
+
+transport 
+  ssh_key: claveprivada.ppk
+
+provisioner:
+  name: chef_zero
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: false
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu-14.04
+    driver_config:
+	image_urn:b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu-14_04_5-LTS-amd64-server-20170619-en-us-30GB
+     vm_name:pruebaamazon
+     vm-tags: 
+	   ostype:linux
+	   distro:ubuntu
+suites:
+  - name: default
+    run_list:
+      - recipe[learn_chef_apache2::default]
+    verifier:
+      inspec_tests:
+        - test/smoke/default
+    attributes:
